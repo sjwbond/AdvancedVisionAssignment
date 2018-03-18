@@ -1,0 +1,39 @@
+function output = denoise_pc(pc, pc_object, minCount)
+    
+    rgb = reshape_rgb(pc);
+    output = zeros(size(pc_object));
+    
+    %look over every row
+    for i = 2:size(rgb,1)-1
+        for j = 2:size(rgb,2)-1 
+            % is this flagged as part of the object?
+            pc_index = (i-1)*size(rgb,2)+j;
+            if pc_object(pc_index) == 1
+                %look at each surrounding pixel and count if there is a 3d
+                %coordinate
+                count = 0;
+                for x = -1:1
+                    for y = -1:1
+                        pc_index2 = (i+x-1)*size(rgb,2)+j+y;
+                        if pc_object(pc_index2) == 1
+                            if not(isnan(pc.Location(pc_index2,1)))
+                                count = count + 1;
+                            end
+                        end
+                    end
+                end
+                
+                if count > minCount
+                    output(pc_index) = 1;
+                else
+                    output(pc_index) = 0;
+                end
+                
+            else
+                output(pc_index) =0;
+            end
+       
+        end
+    end
+    
+end
