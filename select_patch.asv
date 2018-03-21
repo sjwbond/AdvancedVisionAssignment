@@ -47,17 +47,17 @@ function [fitlist,plane] = select_patch(points, IDs)
         dist(i) = norm(points(IDs(pointlist(i)),:) - pnt);
     end
     
-    %histogram(dist);
+    histogram(dist);
     
     DISTTOL = 0.01; %prctile(dist,0.5);
     
     for i = 1 : L
       if dist(i) < DISTTOL
         fitcount = fitcount + 1;
-        tmpnew(fitcount) = IDs(pointlist(i));%tmpnew(fitcount,:) = points(i,:);
+        tmpnew(fitcount) = IDs(pointlist(1,i));%tmpnew(fitcount,:) = points(i,:);
       else
         restcount = restcount + 1;
-        tmprest(restcount) = IDs(pointlist(i));%tmprest(restcount,:) = points(i,:);
+        tmprest(restcount) = IDs(pointlist(1,i));%tmprest(restcount,:) = points(i,:);
       end
     end
     
@@ -67,7 +67,7 @@ function [fitlist,plane] = select_patch(points, IDs)
       % fit a plane
       [plane,resid] = fitplane(tmpnew(1:fitcount),points)
       
-      if resid < 0.00017 %check this number if points are far away from plane
+      if resid < 0.00015 %check this number if points are far away from plane
         fitlist = tmpnew(1:fitcount,:);
         return
       end

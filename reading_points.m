@@ -12,10 +12,10 @@ if exist(myFile, 'file') == 2
 
 background = box{1}.Color;
 bg = background;
-figure(1)
-imag2d(box{1}.Color)
-figure(2)
-imag2d(box{2}.Color)
+%figure(1)
+%imag2d(box{1}.Color)
+%figure(2)
+%imag2d(box{2}.Color)
 
 rec_r = reshape(bg(:,1), [512, 424]);
 rec_g = reshape(bg(:,2), [512, 424]);
@@ -46,11 +46,12 @@ frameCount = size(frames,2)
                pc_object(i) = 1;
            end
         end
+        
         % display the point cloud and corresponding image
-        figure(2);
-        imag2d(rgb) % Shows the 2D images
-        figure(3);
-        imag2d(pc.Color)
+        %figure(2);
+        %imag2d(rgb) % Shows the 2D images
+        %figure(3);
+        %imag2d(pc.Color)
  
         %figure(100+frameNum)
         
@@ -71,7 +72,7 @@ frameCount = size(frames,2)
         pc_object = denoise_pc(pc,pc_object,1);
         
         rgb = RGB_with_Object(pc,pc_object);
-        figure(4); imshow(rgb);
+        %figure(4); imshow(rgb);
 
         steps = 2;
         max = 12;
@@ -86,12 +87,13 @@ frameCount = size(frames,2)
         for i = 1:3
             pc_object = density_thresholding(pc,pc_object,8,3);
             points = pcObject(pc,pc_object);        
-            pc_new = remove_points(pc,pc_object);
+            [pc_new, objectpointIDs] = remove_points_IDs(pc,pc_object);
             showPointCloud(pc_new)
         end
         
         %Get All Planes
-       patches =get_planes(pc_new);
+        
+       planes = get_planes(pc,objectpointIDs);
        
        frameNum
     

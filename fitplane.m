@@ -1,6 +1,12 @@
 % fits a plane to the given set (pointlist) of 3D points
-function [plane,fit] = fitplane(pointlist)
-
+function [plane,fit] = fitplane(IDs, inPointList)
+  
+    pointlist = zeros(size(IDs,1),3);
+    
+    for i = 1:size(IDs)
+        pointlist(i,:) = inPointList(IDs(i),:);
+    end
+    
   [L,W] = size(pointlist);  % input list of L points
   plane = zeros(4,1);
   D = zeros(L,4);           % working array
