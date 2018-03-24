@@ -13,7 +13,7 @@ function output = remove_filtered_pixels(rgb, pc_object)
     end
 
     figure(3);
-    imshow(thresholded);
+    %imshow(thresholded);
     output = 1;
     
 end

@@ -1,10 +1,12 @@
 % find a candidate planar patch
 % if not enough remaining points, returns empty fitlist
 % if cannot find a good patch, returns empty fitlist
-function [fitlist,plane] = select_patch(points, IDs)
+function [fitlist,plane] = select_patch(points, IDs, fittol, DISTTOL, restol)
 
   [L,D] = size(IDs);
-  
+  bestres = 1;
+  nofits = 0;
+  maxfits = 0;
   %tmpnew = zeros(L,3);
   %tmprest = zeros(L,3);
     tmpnew = uint32(zeros(L,1));
@@ -36,7 +38,7 @@ function [fitlist,plane] = select_patch(points, IDs)
   for n = 1 : L
 
     % find points in the neighborhood of the given point
-    DISTTOL = 5.0;
+    %DISTTOL = 5.0;
     fitcount = 0;
     restcount = 0;
   
@@ -49,7 +51,7 @@ function [fitlist,plane] = select_patch(points, IDs)
     
     %histogram(dist);
     
-    DISTTOL = 0.01; %prctile(dist,0.5);
+    %DISTTOL = 0.01; %prctile(dist,0.5);
     
     for i = 1 : L
       if dist(i) < DISTTOL
@@ -63,16 +65,31 @@ function [fitlist,plane] = select_patch(points, IDs)
     
     oldlist = tmprest(1:restcount); %oldlist = tmprest(1:restcount,:);
     
-    if fitcount > 100
+    if fitcount > fittol
+        
+        nofits = nofits+1;
       % fit a plane
-      [plane,resid] = fitplane(tmpnew(1:fitcount),points)
+      [plane,resid] = fitplane(tmpnew(1:fitcount),points);
+      fitcount
+      resid
       
-      if resid < 0.00017 %check this number if points are far away from plane
-        fitlist = tmpnew(1:fitcount,:);
-        return
+      if fitcount > maxfits
+         maxfits = fitcount; 
       end
+      
+      if resid < bestres
+        bestres = resid;
+        bestplane = plane;
+        fitlist = tmpnew(1:fitcount,:);
+      end
+      %if resid < restol %check this number if points are far away from plane
+      %  fitlist = tmpnew(1:fitcount,:);
+      %  return
+      %end
     end
   end
   
-  fitlist=[];  % failed to find a plane
-  plane=[];
+  maxfits
+  %fitlist=[];  % failed to find a plane
+  plane=bestplane;
+ 

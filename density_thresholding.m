@@ -47,7 +47,7 @@ function output = density_thresholding(pc,pc_object,points,sigma)
      end
     
      stdev = nanstd(average_distance);
-     figure(3);histogram(average_distance);
+     %figure(3);histogram(average_distance);
      
      for i = 1:size(output)
          if pc_object(i) == 1

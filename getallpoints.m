@@ -1,12 +1,12 @@
 % selects all points in pointlist P that fit the plane and are within
 % TOL of a point already in the plane (oldlist)
-function [newlist,remaining] = getallpoints(plane,oldlist,P,NP,pcl)
+function [newlist,remaining] = getallpoints(plane,oldlist,P,NP,pcl,PLANETOL,DISTTOL)
 
   pnt = ones(4,1);
   [N,W] = size(P);
   [Nold,W] = size(oldlist);
-  DISTTOL = 0.02;
-  PLANETOL = 1;%10;
+  %DISTTOL = 0.01;
+  %PLANETOL = 1;%10;
   tmpnewlist = zeros(NP,1);
   tmpnewlist(1:Nold) = oldlist;       % initialize fit list
   tmpremaining = zeros(NP,1);           % initialize unfit list
@@ -21,7 +21,7 @@ function [newlist,remaining] = getallpoints(plane,oldlist,P,NP,pcl)
   end
   
   %figure(10); histogram(planedist);
-  PLANETOL = 0.005; %prctile(planedist,0.1); %0.01; %median(dist)-min(dist); %max(dist)-min(dist); 
+   %prctile(planedist,0.1); %0.01; %median(dist)-min(dist); %max(dist)-min(dist); 
   
     % while you could add a new point to the plane keep trying to add more
     % points
